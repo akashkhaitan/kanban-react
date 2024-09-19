@@ -1,6 +1,11 @@
 .ticket-card {
   background-color: white;
-  padding: 4px;
+  padding: 24px;
   border-radius: 8px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
 }
