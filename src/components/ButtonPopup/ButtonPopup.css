@@ -1,0 +1,42 @@
+.button-popup-container {
+  position: relative;
+  font-size: 16px;
+}
+
+.display-button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: white;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.popup {
+  width: 350px;
+  height: 136px;
+  position: absolute;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  top: 32px;
+  background-color: rgb(251, 251, 251);
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.popup-items {
+  padding: 28px;
+}
+
+.popup-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
