@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { statuses } from "../statuses";
+import { priorities } from "../priorities";
 
 export const useGetData = (shoulCall: boolean) => {
   const [tickets, setTickets] = useState<any>([]);
@@ -33,5 +35,7 @@ export const useGetData = (shoulCall: boolean) => {
   return {
     tickets,
     users,
+    statuses,
+    priorities,
   } as const;
 };

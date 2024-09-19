@@ -12,13 +12,26 @@ interface IPopupItem {
 interface ButtonPopupProps {
   title: string;
   popupItems: IPopupItem[];
+  selectedObj: any;
+  onSelectedChange: Function;
 }
 
-const ButtonPopup: React.FC<ButtonPopupProps> = ({ title, popupItems }) => {
+const ButtonPopup: React.FC<ButtonPopupProps> = ({
+  title,
+  popupItems,
+  selectedObj,
+  onSelectedChange,
+}) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const handleDisplayButton = () => {
     setPopupVisible((prevState) => !prevState);
+  };
+
+  const handleSelectChange = (e: any) => {
+    const { name, value } = e.target;
+    onSelectedChange({ [name]: value });
+    setPopupVisible(false);
   };
 
   return (
@@ -33,9 +46,13 @@ const ButtonPopup: React.FC<ButtonPopupProps> = ({ title, popupItems }) => {
           {popupItems.map((item: IPopupItem) => (
             <div className="popup-item">
               <span>{item.type}</span>
-              <select>
+              <select
+                name={item.type}
+                value={selectedObj[item.type]}
+                onChange={(e) => handleSelectChange(e)}
+              >
                 {item.values.map((option: any) => (
-                  <option>{option}</option>
+                  <option value={option.value}>{option.label}</option>
                 ))}
               </select>
             </div>

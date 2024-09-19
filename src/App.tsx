@@ -1,9 +1,4 @@
 import "./App.css";
-import BacklogIcon from "./icons/Backlog.svg";
-import TodoIcon from "./icons/To-do.svg";
-import InProgressIcon from "./icons/in-progress.svg";
-import DoneIcon from "./icons/Done.svg";
-import CancelledIcon from "./icons/Cancelled.svg";
 import ThreeDotMenuIcon from "./icons/3 dot menu.svg";
 import AddIcon from "./icons/add.svg";
 
@@ -11,86 +6,125 @@ import TicketCard from "./components/TicketCard";
 
 import { useGetData } from "./hooks/useGetData";
 import ButtonPopup from "./components/ButtonPopup";
+import { useEffect, useState } from "react";
+
+import Avatar from "./components/Avatar";
 
 function App() {
-  const statuses = [
+  const { tickets, users, statuses, priorities } = useGetData(true);
+
+  const [boardArray, setBoardArray] = useState({
+    ...statuses,
+  });
+
+  const userArr = users.map((user: any) => {
+    return {
+      ...user,
+      avatar: <Avatar text={user.name} />,
+    };
+  });
+
+  const popupItems = [
     {
-      status: "Backlog",
-      icon: BacklogIcon,
+      type: "Display",
+      values: [
+        { label: "Status", value: "status" },
+        { label: "User", value: "userId" },
+        { label: "Priority", value: "priority" },
+      ],
     },
     {
-      status: "Todo",
-      icon: TodoIcon,
-    },
-    {
-      status: "In Progress",
-      icon: InProgressIcon,
-    },
-    {
-      status: "Done",
-      icon: DoneIcon,
-    },
-    {
-      status: "Cancelled",
-      icon: CancelledIcon,
+      type: "Ordering",
+      values: [
+        { label: "Priority", value: "priority" },
+        { label: "Title", value: "title" },
+      ],
     },
   ];
 
-  const { tickets, users } = useGetData(true);
+  const [filterSelected, setFilterSelected] = useState({
+    Display: "status",
+    Ordering: "priority",
+  });
+
+  const boardMap: any = {
+    status: statuses,
+    priority: priorities,
+    userId: userArr,
+  };
+
+  useEffect(() => {
+    const displayFilter = filterSelected["Display"];
+    setBoardArray(boardMap?.[displayFilter]);
+  }, [filterSelected]);
 
   return (
     <div className="App">
       <header className="App-header">
         <ButtonPopup
           title="Display"
-          popupItems={[
-            {
-              type: "Display",
-              values: ["Status", "User", "Priority"],
-            },
-            {
-              type: "Ordering",
-              values: ["Priority", "Title"],
-            },
-          ]}
+          popupItems={popupItems}
+          selectedObj={filterSelected}
+          onSelectedChange={(obj: any) =>
+            setFilterSelected((prevState) => {
+              return { ...prevState, ...obj };
+            })
+          }
         />
       </header>
       <main className="main-section">
         <div className="board-row">
-          {statuses.map((statusObj: any) => {
-            const filteredTickets = tickets.filter(
-              (ticket: any) =>
-                ticket?.status?.toLowerCase() ===
-                statusObj.status?.toLowerCase()
-            );
-            return (
-              <div className="status-section board-column">
-                <div className="column-header">
-                  <div className="column-left-side">
-                    <img src={statusObj.icon} alt="icon"></img>
-                    <h3>{statusObj.status}</h3>
-                    <span>{filteredTickets.length}</span>
-                  </div>
-                  <div className="column-right-side">
-                    <img src={AddIcon} alt="icon"></img>
-                    <img src={ThreeDotMenuIcon} alt="icon"></img>
-                  </div>
-                </div>
+          {boardArray.length > 0 &&
+            boardArray.map((boardColumn: any) => {
+              const displayFilter = filterSelected["Display"];
+              const orderFilter = filterSelected["Ordering"];
 
-                <div className="tickets-container">
-                  {filteredTickets?.map((ticket: any) => {
-                    return (
-                      <TicketCard
-                        title={ticket.title}
-                        description={ticket.description}
-                        status={ticket.status}
-                      />
-                    );
-                  })}
+              const filteredTickets = tickets.filter((ticket: any) => {
+                return (
+                  ticket?.[displayFilter]?.toString().toLowerCase() ===
+                  boardColumn.id?.toString().toLowerCase()
+                );
+              });
+
+              filteredTickets.sort((a: any, b: any) => {
+                return orderFilter === "priority"
+                  ? a.priority - b.priority
+                  : a.title.localeCompare(b.title);
+              });
+
+              return (
+                <div className="status-section board-column">
+                  <div className="column-header">
+                    <div className="column-left-side">
+                      {boardColumn.avatar ? (
+                        boardColumn.avatar
+                      ) : (
+                        <img src={boardColumn?.icon} alt="icon"></img>
+                      )}
+                      <h3>{boardColumn.name}</h3>
+                      <span>{filteredTickets.length}</span>
+                    </div>
+                    <div className="column-right-side">
+                      <img src={AddIcon} alt="icon"></img>
+                      <img src={ThreeDotMenuIcon} alt="icon"></img>
+                    </div>
+                  </div>
+
+                  <div className="tickets-container">
+                    {filteredTickets?.map((ticket: any) => {
+                      return (
+                        <TicketCard
+                          title={ticket.title}
+                          description={ticket.description}
+                          status={ticket.status}
+                          priority={ticket.priority}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </main>
     </div>
