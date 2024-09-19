@@ -1,38 +1,61 @@
 .App {
-  text-align: center;
+  /*   text-align: center; */
+  height: 100vh;
 }
 
 .App-logo {
-  height: 40vmin;
+  height: auto;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App-header {
+  background-color: #ffffff;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: #000000;
+  margin-left: 8px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.main-section {
+  background-color: #f4f5f9;
+  height: calc(100vh - 50px);
+  overflow: scroll;
+}
+
+.board-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+}
+
+.board-column {
+  min-width: 350px;
+  padding: 10px;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column-left-side {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.column-right-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.tickets-container {
+  padding: 4px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  gap: 12px;
 }
