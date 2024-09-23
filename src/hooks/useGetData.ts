@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { statuses } from "../statuses";
 import { priorities } from "../priorities";
+import { mockData } from "../data/apiMock";
 
 export const useGetData = (shoulCall: boolean) => {
   const [tickets, setTickets] = useState<any>([]);
@@ -12,7 +13,7 @@ export const useGetData = (shoulCall: boolean) => {
       method: "get",
       url: "https://api.quicksell.co/v1/internal/frontend-assignment",
     }).then((response) => {
-      return response.data;
+      return response.data || mockData;
     });
   };
 
